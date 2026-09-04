@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import './App.css';
 
-const SUPABASE_URL = 'https://gyglejfhwviybdmklgpdg.supabase.co';
+const SUPABASE_URL = 'https://gyqjefhwviybdmklgpdg.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_LVHoyail_GKmL96OeUeFfg_Jjh9Rm3N';
 const DRIVE_FOLDER_ID = '1gSPScMj1zwX_Q8_06GqHDEBwNhNVa3qQ';
 
