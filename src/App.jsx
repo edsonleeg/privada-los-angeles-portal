@@ -4,7 +4,12 @@ import './App.css';
 
 const SUPABASE_URL = 'https://gyqjefhwviybdmklgpdg.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_LVHoyail_GKmL96OeUeFfg_Jjh9Rm3N';
-const DRIVE_FOLDER_ID = '1gSPScMj1zwX_Q8_06GqHDEBwNhNVa3qQ';
+
+// Carpetas de Drive por año (folder público, "cualquiera con el enlace")
+const DRIVE_FOLDERS = {
+  '2025': '1gSPScMj1zwX_Q8_06GqHDEBwNhNVa3qQ',
+  '2026': '1WHdzU2HtRMMqZ5i9QXC1e7u6fDir3v2k',
+};
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -15,41 +20,9 @@ export default function App() {
   const [adminPass, setAdminPass] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [pdfs, setPdfs] = useState([]);
   const [logs, setLogs] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
-
-  // Cargar PDFs de Drive
-  useEffect(() => {
-    if (page === 'portal' || page === 'admin') {
-      fetchPDFsFromDrive();
-    }
-  }, [page]);
-
-  const fetchPDFsFromDrive = async () => {
-    try {
-      // Cargar lista de PDFs desde el folder público
-      const months = [
-        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-      ];
-      
-      const pdfList = months.map((month, index) => {
-        const year = index < 5 ? '2025' : '2026'; // Agosto 2025 a Agosto 2026
-        const monthNum = index < 5 ? (index + 8) : (index - 4);
-        return {
-          name: `Reporte_Financiero_${month}_${year}.pdf`,
-          month: month,
-          year: year,
-          driveLink: `https://drive.google.com/uc?export=download&id=[PDF_ID]` // Será reemplazado
-        };
-      });
-      
-      setPdfs(pdfList);
-    } catch (err) {
-      console.error('Error cargando PDFs:', err);
-    }
-  };
+  const [activeYear, setActiveYear] = useState('2026');
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -124,12 +97,6 @@ export default function App() {
     }
   };
 
-  const downloadPDF = async (pdfName) => {
-    // Aquí van los links directos a Drive
-    // Por ahora abre en Drive
-    window.open(`https://drive.google.com/drive/folders/${DRIVE_FOLDER_ID}`, '_blank');
-  };
-
   return (
     <div className="app">
       {page === 'login' && (
@@ -186,17 +153,31 @@ export default function App() {
               Cerrar sesión
             </button>
           </div>
-          <div className="pdfs-grid">
-            {pdfs.map((pdf, idx) => (
-              <div key={idx} className="pdf-card">
-                <div className="pdf-icon">📄</div>
-                <h3>{pdf.month} {pdf.year}</h3>
-                <button onClick={() => downloadPDF(pdf.name)}>
-                  Descargar
-                </button>
-              </div>
+
+          <div className="year-tabs">
+            {Object.keys(DRIVE_FOLDERS).map((year) => (
+              <button
+                key={year}
+                className={`year-tab ${activeYear === year ? 'active' : ''}`}
+                onClick={() => setActiveYear(year)}
+              >
+                {year}
+              </button>
             ))}
           </div>
+
+          <div className="drive-preview-card">
+            <iframe
+              key={activeYear}
+              src={`https://drive.google.com/embeddedfolderview?id=${DRIVE_FOLDERS[activeYear]}#list`}
+              title={`Estados de cuenta ${activeYear}`}
+              className="drive-iframe"
+              frameBorder="0"
+            />
+          </div>
+          <p className="drive-hint">
+            Da click en cualquier reporte para verlo en vista previa o descargarlo.
+          </p>
         </div>
       )}
 
