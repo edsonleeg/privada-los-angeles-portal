@@ -7,7 +7,7 @@ const SUPABASE_KEY = 'sb_publishable_LVHoyail_GKmL96OeUeFfg_Jjh9Rm3N';
 
 // Carpetas de Drive por año (folder público, "cualquiera con el enlace")
 const DRIVE_FOLDERS = {
-  '2025': '1gSPScMj1zwX_Q8_06GqHDEBwNhNVa3qQ',
+  '2025': '1j-i-9hZIKm6Egf322gx2iGnx-R3_Wwl7',
   '2026': '1WHdzU2HtRMMqZ5i9QXC1e7u6fDir3v2k',
 };
 
